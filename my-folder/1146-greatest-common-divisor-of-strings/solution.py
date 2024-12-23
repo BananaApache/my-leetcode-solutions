@@ -1,30 +1,17 @@
-class Solution(object):
-    def gcdOfStrings(self, str1, str2):
-        """
-        :type str1: str
-        :type str2: str
-        :rtype: str
-        """
-
-        patterns = {}
-        pattern_list = []
-
-        best = max(str1, str2)
-
-        for index in range(len( best )):
-            pattern_list.append( best[0:index + 1] )
-
-        for pattern in pattern_list:
-            if len(str1.replace(pattern, "")) == 0 and len(str2.replace(pattern, "")) == 0:
-                patterns[pattern] = 0
+class Solution:
+    def gcdOfStrings(self, str1: str, str2: str) -> str:
         
-        print(patterns)
-        good_pattern = ""
+        long_word, short_word = (str1, str2) if len(str1) > len(str2) else (str2, str1)
 
-        for k, v in patterns.items():
-            if len(k) > len(good_pattern) or good_pattern == "":
-                good_pattern = k
-        
-        return good_pattern
+        choices = []
 
-        
+        for index in range(len(short_word)):
+            choices.append(short_word[:index + 1])
+
+        choices.reverse()
+
+        for choice in choices:
+            if ''.join(long_word.split(choice)) == '' and ''.join(short_word.split(choice)) == '':
+                return choice
+
+        return ""
