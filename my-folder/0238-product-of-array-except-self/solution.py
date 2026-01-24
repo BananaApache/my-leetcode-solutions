@@ -1,30 +1,29 @@
 class Solution:
     def productExceptSelf(self, nums: List[int]) -> List[int]:
+
+        # get the total products to the left
+
+        preProducts = [1]
+        for index in range(1, len(nums)):
+            preProducts.append( preProducts[index - 1] * nums[index - 1] )
+
+        print(preProducts)
         
-        entire_product = 1
-        has_zero = False
+        # get the total products to the right
+            # by reversing initial array
 
+        postProducts = [1]
+        reversedNums = nums[::-1]
+        for index in range(1, len(reversedNums)):
+            postProducts.append( postProducts[index - 1] * reversedNums[index - 1] )
+
+        postProducts = postProducts[::-1]
+
+        # loop through indexes and multiply item at index left times right
+        result = []
         for index in range(len(nums)):
-            if has_zero and nums[index] == 0:
-                entire_product = 0 
-                break
+            result.append(preProducts[index] * postProducts[index])
 
-            elif nums[index] == 0:
-                has_zero = True
-                continue
+        return result
 
-            entire_product = nums[index] * entire_product
-
-        res = []
-
-        for index in range(len(nums)):
-            if has_zero:
-                if nums[index] == 0:
-                    res.append(entire_product)
-                else:
-                    res.append(0)
-            else:
-                res.append(int(entire_product / nums[index]))
-
-        return res
 
