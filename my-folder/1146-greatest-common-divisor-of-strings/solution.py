@@ -1,17 +1,27 @@
 class Solution:
     def gcdOfStrings(self, str1: str, str2: str) -> str:
         
-        long_word, short_word = (str1, str2) if len(str1) > len(str2) else (str2, str1)
+        # initialize longestSub
+        longestSub = ""
 
-        choices = []
+        # get shortest string of the two
+        shortestString = min(str1, str2)
+        longestString = max(str1, str2)
 
-        for index in range(len(short_word)):
-            choices.append(short_word[:index + 1])
+        # get all possible substrings that are multiples of longer one
+        possibles = []
+        for index in range(0, len(shortestString)):
+            if len(longestString) % (index + 1) == 0:
+                possibles.append(shortestString[0 : index + 1])
 
-        choices.reverse()
+        # loop through all possibles
+        for possible in possibles:
+            # if Shorter == possible * (len(Shorter) / len(possible))
+            if shortestString == possible * int(len(shortestString) / len(possible)) and longestString == possible * int(len(longestString) / len(possible)):
+                longestSub = possible
+            #    AND 
+            #    Longer == possible * (len(Longer) / len(possible)) -> set longestSub to possible
 
-        for choice in choices:
-            if ''.join(long_word.split(choice)) == '' and ''.join(short_word.split(choice)) == '':
-                return choice
+        # return longestSub
+        return longestSub
 
-        return ""
