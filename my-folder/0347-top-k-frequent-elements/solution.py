@@ -1,35 +1,25 @@
-
-from collections import deque
-
 class Solution:
     def topKFrequent(self, nums: List[int], k: int) -> List[int]:
-        
-        # [1,1,1,2,2,3], k = 2
-
-        # initialize a result array 
         result = []
 
-        freq = {}
+        # items mapped to count
+        itemToCount = {}
+        for num in nums:
+            itemToCount[num] = 1 + itemToCount.get(num, 0)
 
-        for index in range(len(nums)):
-            freq[nums[index]] = 1 + freq.get(nums[index], 0)
-        
-        # fill the frequency hashmap
-        countMap = []
+        # count mapped to array of item(s)
+        countToItems = {}
+        for item, count in itemToCount.items():
+            countToItems[count] = countToItems.get(count, []) + [item]
 
-        # fill countMap from 1..len(nums)
-        for index in range(len(nums)):
-            countMap.append(deque())
-        
-        for item, count in freq.items():
-            countMap[count - 1].append(item)
+        for index in range(len(nums), -1, -1):
+            if countToItems.get(index, None):
+                # stop when either the Items is empty OR k <= 0
+                # complement: len(Items) > 0 and k > 0
+                while len(countToItems[index]) > 0 and k > 0:
+                    result.append(countToItems[index].pop())
+                    k -= 1
 
-        # loop through the keys reversed
-        for q in countMap[::-1]:
-            # keep popping until q empty OR length of result is k
-            while len(q) != 0 and len(result) != k:
-                result.append(q.popleft())
-
-        # return result array
         return result
 
+            
