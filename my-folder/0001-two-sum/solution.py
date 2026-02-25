@@ -1,16 +1,13 @@
 class Solution:
     def twoSum(self, nums: List[int], target: int) -> List[int]:
         
-        hashmap = {}
+        differenceToIndex = {}
 
-        for index in range(len(nums)): 
-            print(index)
-
+        for index in range(len(nums)):
             difference = target - nums[index]
 
-            if hashmap.get(nums[index]) != None: # difference exists in hashmap
-                return [hashmap.get(nums[index]), index]
-            else: # difference not in hashmap, so add it
-                hashmap.update({difference : index})
+            if nums[index] not in differenceToIndex:
+                differenceToIndex[difference] = index
+            else:
+                return (differenceToIndex[nums[index]], index)
 
-        print(hashmap)
