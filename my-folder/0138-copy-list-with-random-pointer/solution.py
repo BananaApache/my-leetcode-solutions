@@ -9,26 +9,26 @@ class Node:
 
 class Solution:
     def copyRandomList(self, head: 'Optional[Node]') -> 'Optional[Node]':
-
-        if not head:
-            return None
         
-        hashmap = { None: None }
+        originalToNew = {None: None}
 
-        # first pass
-        node = head
-        while node:
-            hashmap[node] = Node(node.val)
+        newHead = head
+        dummy = Node(0)
+        node = dummy
+
+        while newHead:
+            newNode = Node(newHead.val)
+            node.next = newNode
+            originalToNew[newHead] = newNode
             node = node.next
+            newHead = newHead.next
 
-        # second pass
-        node = head
-        while node:
-            copy = hashmap[node]
-            copy.next = hashmap[node.next]
-            copy.random = hashmap[node.random]
-            node = node.next
+        curr = head
+        while curr:
+            if curr.random:
+                originalToNew[curr].random = originalToNew[curr.random]
+            
+            curr = curr.next
 
-        return hashmap[head]
-
-
+        return originalToNew[head]
+        
