@@ -4,27 +4,22 @@
 #         self.val = val
 #         self.left = left
 #         self.right = right
-
 class Solution:
     def diameterOfBinaryTree(self, root: Optional[TreeNode]) -> int:
-        self.result = 0
+        
+        self.diameter = 0
 
-        def getDiameter(root: Optional[TreeNode]) -> int:
-            global result
+        def dfs(root):
             # base case
             if not root:
                 return 0
 
-            left = getDiameter(root.left)
-            right = getDiameter(root.right)
+            left = dfs(root.left)
+            right = dfs(root.right)
 
-            self.result = max(self.result, left + right)
+            self.diameter = max(self.diameter, left + right)
             return 1 + max(left, right)
 
-        # longest depth of left + longest depth of right
-
-        getDiameter(root)
-
-        return  self.result
-
+        dfs(root)
+        return self.diameter
 
