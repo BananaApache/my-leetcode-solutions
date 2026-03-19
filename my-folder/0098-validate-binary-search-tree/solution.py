@@ -5,19 +5,17 @@
 #         self.left = left
 #         self.right = right
 class Solution:
-
-    def dfs(self, root, bottom, top):
-        # base case
-        if root is None:
-            return True
-
-        if not (bottom < root.val and root.val < top):
-            return False
-
-        return self.dfs(root.left, bottom, min(root.val, top)) and self.dfs(root.right, max(root.val, bottom), top)
-
     def isValidBST(self, root: Optional[TreeNode]) -> bool:
         
-        return self.dfs(root, float("-inf"), float("inf"))
-         
+        def isValid(root, left, right):
+            if root is None:
+                return True
+
+            currIsValid = (left < root.val) and (root.val < right)
+            if not currIsValid:
+                return False
+            else:
+                return isValid(root.left, left, root.val) and isValid(root.right, root.val, right)
+
+        return isValid(root, -math.inf, math.inf)
 
