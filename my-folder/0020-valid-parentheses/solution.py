@@ -1,46 +1,22 @@
 class Solution:
     def isValid(self, s: str) -> bool:
-
-        # edge case:
-        if len(s) == 1:
-            return False
-
-        # ({[]})
-
-        # (
-        # popped = {
-
-        # {{(
-        # 
         
-        # initializing
         stack = []
-
-        bracketMap = {
-            "]": "[", 
-            ")": "(", 
-            "}": "{"
+        charMap = {
+            ")": "(",
+            "}": "{",
+            "]": "["
         }
 
-        # loop through entire string
-        for index in range(len(s)):
-            # if current char is "[" or "(" or "{" -> current char is a left bracket
-            if s[index] in "[({":
-                # append to stack
-                stack.append(s[index])
-            # else -> current char is a right bracket
+        for char in s:
+            # opening bracket
+            if char not in charMap:
+                stack.append(char)
+            # closing bracket
             else:
-                if len(stack) == 0:
+                if not stack or stack[-1] != charMap[char]:
                     return False
-                # pop from stack
-                popped = stack.pop()
-                # if popped is not the opposite of current bracket
-                if popped != bracketMap[s[index]]:
-                    return False
+                stack.pop()
         
-        # if stack not empty
-        if len(stack) != 0:
-            return False
-        else:
-            return True
+        return len(stack) == 0
 
