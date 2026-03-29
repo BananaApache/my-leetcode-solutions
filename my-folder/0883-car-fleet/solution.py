@@ -1,19 +1,23 @@
 class Solution:
     def carFleet(self, target: int, position: List[int], speed: List[int]) -> int:
+         
+        cars = [] # array of tuple(position, speed)
+        for index in range(len(position)):
+            cars.append((position[index], speed[index]))
         
-        # edge case
-        if len(position) == 1: # number of cars is 1
-            return 1
+        cars.sort(key=lambda x: x[0])
 
         stack = []
-        pairs = sorted([(p, s) for p, s in zip(position, speed)])
-        
-        for index in range(len(pairs) - 1, -1, -1):
-            p, s = pairs[index]
-            stack.append((target - p) / s)
-            if len(stack) >= 2 and stack[-1] <= stack[-2]:
-                stack.pop()
+
+        for index in range(len(cars) - 1, -1, -1):
+            position1, speed1 = cars[index] # new car
+            if stack:
+                position2, speed2 = stack[-1] # car on stack
+
+                if (target - position1) / speed1 > (target - position2) / speed2:
+                    stack.append((position1, speed1))
+            else:
+                stack.append((position1, speed1))
 
         return len(stack)
-
 
