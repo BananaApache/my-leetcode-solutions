@@ -5,25 +5,35 @@ class Solution:
         right = len(nums) - 1
 
         while left <= right:
-
             middle = (left + right) // 2
 
-            if target == nums[middle]:
-                return middle
+            # case middle in LEFT portion
+            if nums[left] > nums[right] and nums[left] <= nums[middle]:
+                
+                if target > nums[middle] or (target < nums[middle] and target < nums[left]):
+                    left = middle + 1
+                elif target >= nums[left] and target < nums[middle]:
+                    right = middle - 1
+                else:
+                    return middle
 
-            if nums[left] <= nums[middle]:
-                # we are in left portion
-                if nums[middle] < target or target < nums[left]:
+            # case middle in RIGHT portion
+            elif nums[left] > nums[right] and nums[left] > nums[middle]:
+                
+                if target < nums[middle] or (target > nums[middle] and target > nums[right]):
+                    right = middle - 1
+                elif target > nums[middle] and target <= nums[right]:
                     left = middle + 1
                 else:
-                    right = middle - 1
-            else:
-                # we are in right portion
-                if target < nums[middle] or nums[right] < target:
-                    right = middle - 1
-                else:
-                    left = middle + 1
+                    return middle
             
-        return -1
+            else:
+                if target > nums[middle]:
+                    left = middle + 1
+                elif target < nums[middle]:
+                    right = middle - 1
+                else:
+                    return middle
 
+        return -1
 
