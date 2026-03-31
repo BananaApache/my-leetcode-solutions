@@ -1,11 +1,13 @@
-
 class KthLargest:
 
     def __init__(self, k: int, nums: List[int]):
         self.k = k
+        
         self.minHeap = nums
         heapq.heapify(self.minHeap)
-        while len(self.minHeap) > self.k: # stop when its less than or (equal) to k
+        
+        # keep popping and stop when length of minHeap is less than or equal to k
+        while len(self.minHeap) > self.k:
             heapq.heappop(self.minHeap)
 
     def add(self, val: int) -> int:
