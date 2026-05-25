@@ -30,4 +30,3 @@ class Solution:
         
         backtrack([s[0]], 1)
         return result
-
