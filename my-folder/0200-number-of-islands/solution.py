@@ -2,29 +2,32 @@ class Solution:
     def numIslands(self, grid: List[List[str]]) -> int:
         
         rows, cols = len(grid), len(grid[0])
-        visited = set()
+
         islands = 0
 
-        def bfs(row, col):
-            q = deque()
-            visited.add( (row, col) )
-            q.append( (row, col) )
+        def getNeighbors(row, col):
+            neighbors = []
+            directions = [ (1,0), (0,1), (-1,0), (0,-1) ]
+            for addRow, addCol in directions:
+                newRow, newCol = row + addRow, col + addCol
+                if newRow in range(rows) and newCol in range(cols):
+                    neighbors.append( (newRow, newCol) )
+            
+            return neighbors
 
+        def bfs(q):
             while q:
-                newRow, newCol = q.popleft()
-                directions = [[1,0],[-1,0],[0,1],[0,-1]]
+                row, col = q.popleft()
+                for newRow, newCol in getNeighbors(row, col):
+                    if grid[newRow][newCol] == "1":
+                        q.append( (newRow, newCol) )
+                        grid[newRow][newCol] = "X"
 
-                for dr, dc in directions:
-                    row, col = newRow + dr, newCol + dc
-                    if (row in range(rows) and col in range(cols) and grid[row][col] == "1" and (row, col) not in visited):
-                        q.append((row, col))
-                        visited.add((row, col))
-
-        for r in range(rows):
-            for c in range(cols):
-                if grid[r][c] == "1" and (r, c) not in visited:
-                    bfs(r, c)
+        for row in range(rows):
+            for col in range(cols):
+                if grid[row][col] == "1":
+                    bfs(deque([(row, col)]))
                     islands += 1
-        
+
         return islands
 
