@@ -1,32 +1,33 @@
 class Solution:
     def canFinish(self, numCourses: int, prerequisites: List[List[int]]) -> bool:
         
-        course2pre = defaultdict(list)
-
+        pre2courses = { num : [] for num in range(numCourses) }
         for course, pre in prerequisites:
-            course2pre[course].append(pre)
+            pre2courses[pre].append(course)
 
         visited = set()
-        def dfs(course):
+
+        def dfs(pre):
             # base cases
-            if course in visited:
+            if pre in visited:
                 return False
-            if course2pre[course] == []:
+            if pre2courses[pre] == []:
                 return True
-            
-            visited.add(course)
-            for pre in course2pre[course]:
-                if not dfs(pre):
+
+            visited.add(pre)
+
+            for course in pre2courses[pre]:
+                if not dfs(course):
                     return False
-            
-            visited.remove(course)
-            course2pre[course] = []
+
+            pre2courses[pre] = []
+            visited.remove(pre)
             return True
 
-        for course in range(numCourses):
-            if not dfs(course):
+        for pre in pre2courses:
+            if not dfs(pre):
                 return False
-
+        
         return True
 
 
