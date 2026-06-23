@@ -1,46 +1,25 @@
 class Solution:
-    def threeSum(self, nums: List[int]) -> List[List[int]]:
-        
-        # [-1, 0, 1]
-        # [-4, -1, -1, 0, 1, 2]
+    def threeSum(self, nums: list[int]) -> list[list[int]]:
 
-        # create a set to keep track of seen nums
-        prev = None
-        # initialize result array
+        nums.sort()
         result = []
-        # sort array too
-        nums = sorted(nums)
-
-        # start looping through nums
-        for index in range(0, len(nums) - 2):
-            # add that num to set if not there already, if there skip
-            if nums[index] == prev:
+        for index in range(len(nums)):
+            if index > 0 and nums[index - 1] == nums[index]:
                 continue
-            else:
-                prev = nums[index]
 
-            # take left and right index
-            leftPointer = index + 1
-            rightPointer = len(nums) - 1
-
-            # while left < right
-            while leftPointer < rightPointer:
-                # add them
-                total = nums[leftPointer] + nums[rightPointer]
-                # if sum bigger than 0 - nums[index] -> decrease Right Pointer
-                if total > 0 - nums[index]:
-                    rightPointer -= 1
-                # if sum smaller than 0 - nums[index] -> increase Left Pointer
-                elif total < 0 - nums[index]:
-                    leftPointer += 1
-                # if sum equal, then add to result array
+            left = index + 1
+            right = len(nums) - 1
+            target = 0 - nums[index]
+            while left < right:
+                if nums[left] + nums[right] < target:
+                    left += 1
+                elif nums[left] + nums[right] > target:
+                    right -= 1
                 else:
-                    result.append([nums[index], nums[leftPointer], nums[rightPointer]])
-                    # pick random one pointer to move
-                    leftPointer += 1
-                    while nums[leftPointer] == nums[leftPointer - 1] and leftPointer < rightPointer:
-                        leftPointer += 1
-        
-        # return result array
+                    result.append( (nums[index], nums[left], nums[right]) )
+                    left += 1
+                    while nums[left] == nums[left - 1] and left < right:
+                        left += 1
+
         return result
 
