@@ -1,22 +1,43 @@
-
-# def factorial(n):
-#     if n == 0 or n == 1:
-#         return 1
-#     else:
-#         return n * factorial(n - 1)
-
-def esteban_method(x):
-    product = 1
-
-    for i in range(1, x + 1):
-        product = product * i
-
-    return product
-
 class Solution:
     def uniquePaths(self, m: int, n: int) -> int:
-
-        # return int(factorial(m + n - 2) / (factorial(m - 1) * factorial(n - 1)))
-        return int(esteban_method(m + n - 2) / (esteban_method(m - 1) * esteban_method(n - 1)))
         
+        
+        # super complicated 2D DP :(
+
+        row = [1] * n
+
+        for _ in range(m - 1):
+            newRow = [1] * n
+            for index in range(n - 2, -1, -1):
+                newRow[index] = newRow[index + 1] + row[index]
+            row = newRow
+
+        return row[0]
+
+        # rows, cols = m, n
+
+        # dp = [ [0 for _ in range(cols)] for _ in range(rows)]
+        # dp[rows - 1][cols - 1] = 1
+
+        # print(dp)
+
+        # for row in range(rows - 1, -1, -1):
+        #     for col in range(cols - 1, -1, -1):
+        #         if row == rows - 1 and col == cols - 1:
+        #             continue
+                
+        #         if row + 1 in range(rows):
+        #             dp[row][col] += dp[row + 1][col]
+        #         if col + 1 in range(cols):
+        #             dp[row][col] += dp[row][col + 1]
+        
+        # return dp[0][0]
+
+
+
+        # easy peasy combinatorics
+        # n = (m + n - 2)
+        # print(n)
+
+        # return int((factorial(n)) / (factorial(m - 1) * factorial(n - m + 1)))
 
