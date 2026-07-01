@@ -1,35 +1,33 @@
 class Solution:
     def minEatingSpeed(self, piles: List[int], h: int) -> int:
+
         import math
-        
-        # edge case
-        # if length of piles equals h
-        # biggest = max(piles)
-        # if len(piles) == h:
-        #     return biggest
 
-        result = max(piles) + 1
+        left = 1
+        right = max(piles)
+        result = right
 
-        # piles = sorted(piles)[::-1]
-
-        leftK = 1
-        rightK = result - 1
-        while leftK <= rightK:
-            middleK = (leftK + rightK) // 2
-            totalHours = 0
+        def canEat(speed):
+            nonlocal result
+            hours = 0
 
             for bananas in piles:
-                totalHours += math.ceil(bananas / middleK)
-                if totalHours > h:
-                    # increase banana eating speed
-                    leftK = middleK + 1
-                    break
-            
-            if totalHours <= h:
-                result = min(result, middleK)
-                rightK = middleK - 1 # decrease banana eating speed
+                hours += math.ceil(bananas / speed)
+                        
+            if hours <= h:
+                return True
+            else:
+                return False
+        
+
+        while left <= right:
+            speed = (left + right) // 2
+
+            if canEat(speed):
+                result = min(result, speed)
+                right = speed - 1
+            else:
+                left = speed + 1
 
         return result
-
-
 
