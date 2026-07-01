@@ -1,38 +1,41 @@
 class Solution:
     def findOrder(self, numCourses: int, prerequisites: List[List[int]]) -> List[int]:
         
-        course2pres = { course : [] for course in range(numCourses) }
+        # build adj map
+        course2pres = {course : [] for course in range(numCourses)}
         for course, pre in prerequisites:
             course2pres[course].append(pre)
 
         result = []
-        visited = set()
-        inResult = set()
-        
+        seen = set()
+        cycle = set()
         def dfs(course):
-            # base cases
-            if course in visited:
-                return False # cycle detected
-            if course2pres[course] == []:
-                if course not in inResult:
-                    result.append(course)
-                    inResult.add(course)
-                return True # found course with no prereqs
+            # base case
+            if course in seen:
+                return True
+            if course in cycle:
+                return False
 
-            visited.add(course)
+            if course2pres[course] == []:
+                result.append(course)
+                seen.add(course)
+                return True
+
+            cycle.add(course)
             for pre in course2pres[course]:
                 if not dfs(pre):
                     return False
-            visited.remove(course)
-            course2pres[course] = []
+            cycle.remove(course)
+
             result.append(course)
-            inResult.add(course)
-
+            seen.add(course)
+            
             return True
-
-        for course in course2pres:
+        
+        for course in range(numCourses):
             if not dfs(course):
                 return []
-
+        
         return result
+        
 
