@@ -1,31 +1,27 @@
 class Solution:
     def letterCombinations(self, digits: str) -> List[str]:
         
-        hashmap = [
-            (), 
-            (), 
-            ('a','b','c'),
-            ('d','e','f'),
-            ('g','h','i'),
-            ('j','k','l'),
-            ('m','n','o'),
-            ('p','q','r','s'),
-            ('t','u','v'),
-            ('w','x','y','z')
-        ]
+        hashmap = {
+            '2':['a','b','c'],
+            '3':['d','e','f'],
+            '4':['g','h','i'],
+            '5':['j','k','l'],
+            '6':['m','n','o'],
+            '7':['p','q','r','s'],
+            '8':['t','u','v'],
+            '9':['w','x','y','z']
+        }
 
         result = []
-
-        def backtrack(node, index):
+        def dfs(index, comb):
             # base case
-            if index == len(digits):
-                result.append(node)
+            if index >= len(digits):
+                result.append(comb)
                 return
             
-            for char in hashmap[int(digits[index])]:
-                backtrack(node + char, index + 1)
+            for char in hashmap[digits[index]]:
+                dfs(index + 1, comb + char)
         
-        backtrack("", 0)
-
+        dfs(0, "")
         return result
 
