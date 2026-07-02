@@ -4,48 +4,32 @@ class Solution:
         Do not return anything, modify nums in-place instead.
         """
         
-        # freq = {
-        #     0: 0,
-        #     1: 0,
-        #     2: 0
-        # }
+        left = 0
+        right = len(nums) - 1
 
+        index = 0
+        while index <= right:
+            if nums[index] == 0:
+                nums[left], nums[index] = nums[index], nums[left]
+                left += 1
+                index += 1
+            elif nums[index] == 1:
+                index += 1
+            elif nums[index] == 2:
+                nums[right], nums[index] = nums[index], nums[right]
+                right -= 1
+
+        
+        # O(n) space, O(n) time
+        # freq = defaultdict(int)
         # for num in nums:
         #     freq[num] += 1
-
+        
         # index = 0
-        # for color, count in freq.items():
-        #     for _ in range(0, count):
-        #         nums[index] = color
+        # for num in range(3):
+        #     val = freq[num]
+        #     while val:
+        #         nums[index] = num
+        #         val -= 1
         #         index += 1
-
-        # NO EXTRA SPACE
-
-        # three pointers?
-
-        # middle always moving
-        # stop when middle reaches right
-        # left moves when it sees a zero
-        # right moves when it sees a two
-        # if middle sees a two, it swaps it with right
-        # if middle sees a zero, it swaps with left
-        # when swap occurs, check all pointers again?
-
-        def swap(pos1, pos2):
-            nums[pos1], nums[pos2] = nums[pos2], nums[pos1]
-
-        left = 0
-        middle = 0
-        right = len(nums) - 1
-                
-        while middle <= right:
-            if nums[middle] == 2:
-                swap(middle, right)
-                right -= 1
-                middle -= 1
-            elif nums[middle] == 0:
-                swap(middle, left)
-                left += 1
-
-            middle += 1
 
