@@ -1,22 +1,19 @@
 class Solution:
     def dailyTemperatures(self, temperatures: List[int]) -> List[int]:
         
-        # [73,74,75,71,69,72,76,73]
-        #                 
+        # monotonic stack because used to keep track of larger ones by order
+        # allows for iterative solution
 
-        #                 
+        answer = [0 for _ in range(len(temperatures))]
+        stack = [] # (index, temp)
 
-        result = [0] * len(temperatures)
-        stack = [] # max of stack should always be at bottom
-
-        # loop through
         for index in range(len(temperatures)):
-            # check new temp larger than top of stack
-            while stack and temperatures[index] > stack[-1][0]: # stop when temp less than top of stack
-                _, resultIndex = stack.pop()
-                result[resultIndex] = index - resultIndex
+            if stack:
+                while stack and stack[-1][1] < temperatures[index]:
+                    poppedIndex, _ = stack.pop()
+                    answer[poppedIndex] = index - poppedIndex
 
-            stack.append([temperatures[index], index])
+            stack.append( (index, temperatures[index]) )
 
-        return result
+        return answer
 
