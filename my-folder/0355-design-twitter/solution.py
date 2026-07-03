@@ -1,61 +1,34 @@
 class Twitter:
 
     def __init__(self):
-        self.usersFollowings = {} # userID -> set() of following IDs
-        self.userTweets = {} # userID -> Array[(time, tweetID)]
+        self.users = defaultdict(lambda: {'posts': [], 'following': set()}) # userId -> {posts: [], following: []}
         self.time = 0
 
     def postTweet(self, userId: int, tweetId: int) -> None:
-        self.userTweets[userId] = self.userTweets.get(userId, []) + [(self.time, tweetId)]
+        self.users[userId]['posts'].append( (self.time, tweetId) )
         self.time += 1
 
     def getNewsFeed(self, userId: int) -> List[int]:
-        result = []
-        followingIds = list(self.usersFollowings.get(userId, set()))
-        followingIds.append(userId)
+        minHeap = []
+        for following in self.users[userId]['following'] | {userId}:
+            minHeap += self.users[following]['posts']
+        
+        heapq.heapify_max(minHeap)
 
-        pointers = []
-        sumPointers = 0
-        for followingId in followingIds:
-            if followingId in self.userTweets:
-                pointers.append(len(self.userTweets[followingId]))
-                sumPointers += len(self.userTweets[followingId])
-            else:
-                pointers.append(0)
+        news = []
+        k = 10
+        while len(minHeap) > 0 and k > 0: # stop when (k is 0) OR (minHeap is empty)
+            news.append(heapq.heappop_max(minHeap)[1])
+            k -= 1
 
-        # stop when length of result >= 10 OR if all pointers at 0
-        while len(result) < 10 and sumPointers > 0:
-            mostRecent = (-1, None)
-            lastMoved = -1
-
-            index = 0
-            for followingId in followingIds:
-                if pointers[index] > 0:
-                    tweet = self.userTweets[followingId][pointers[index] - 1]
-                    if tweet[0] > mostRecent[0]:
-                        lastMoved = index
-                        mostRecent = tweet
-                    
-                index += 1
-
-            if lastMoved != -1:
-                pointers[lastMoved] -= 1
-                sumPointers -= 1
-                result.append(mostRecent[1])
-            else:
-                break
-
-        return result
+        return news
 
     def follow(self, followerId: int, followeeId: int) -> None:
-        if followerId in self.usersFollowings:
-            self.usersFollowings[followerId].add(followeeId)
-        else:
-            self.usersFollowings[followerId] = set({followeeId})
+        self.users[followerId]['following'].add(followeeId)
 
     def unfollow(self, followerId: int, followeeId: int) -> None:
-        if followerId in self.usersFollowings:
-            self.usersFollowings[followerId].discard(followeeId)
+        self.users[followerId]['following'].discard(followeeId)
+
 
 # Your Twitter object will be instantiated and called as such:
 # obj = Twitter()
