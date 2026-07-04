@@ -8,14 +8,13 @@ class Solution:
     def isValidBST(self, root: Optional[TreeNode]) -> bool:
         
         def isValid(root, left, right):
+            # base case
             if root is None:
                 return True
 
-            currIsValid = (left < root.val) and (root.val < right)
-            if not currIsValid:
-                return False
-            else:
-                return isValid(root.left, left, root.val) and isValid(root.right, root.val, right)
+            # print(f"{left} < {root.val} < {right}")
 
-        return isValid(root, -math.inf, math.inf)
+            return (left < root.val and root.val < right) and isValid(root.left, left, root.val) and isValid(root.right, root.val, right)
+        
+        return isValid(root.left, -float('inf'), root.val) and isValid(root.right, root.val, float('inf'))
 
