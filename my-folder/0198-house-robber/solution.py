@@ -1,18 +1,17 @@
 class Solution:
     def rob(self, nums: List[int]) -> int:
 
-        # base cases
-        if len(nums) < 3:
-            return max(nums)
+        # edge case
+        if len(nums) == 1:
+            return nums[0]
         
-        nums.append(0)
+        dp = [0 for _ in range(len(nums))]
+        dp[-1] = nums[-1]
+        dp.append(0)
 
-        for index in range(len(nums) - 3, -1, -1):
-            newCost = 0
-            for cost in nums[index + 2 : ]:
-                newCost = max(newCost, cost)
+        for index in range(len(nums) - 2, -1, -1):
+            dp[index] = max(nums[index] + dp[index + 2], dp[index + 1])
+            
+        return max(dp[0], dp[1])
 
-            nums[index] += newCost
-
-        return max(nums[0], nums[1])
 
