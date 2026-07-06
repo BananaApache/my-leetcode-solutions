@@ -1,47 +1,20 @@
 class Solution:
     def lengthOfLongestSubstring(self, s: str) -> int:
-
-        # edge cases:
-        # length 0 or 1
-        if len(s) == 0 or len(s) == 1:
+        
+        if len(s) < 2:
             return len(s)
-
-        # charSet = ab
-        # a b c d c c   length 6
-        # L R        
-        #                
-
-        # initializing
-        charSet = set()
+        
         left = 0
-        maxLength = 1
+        result = 0
+        substring = set()
 
-        # add char at Left to charSet
-        charSet.add(s[left])
-
-        # keep moving Right index from 1..len(s)
-        for right in range(1, len(s)):
-            # but if char at Right in charSet -> we found a duplicate
-            if s[right] in charSet:
-                # remove char at Left from charSet
-                charSet.remove(s[left])
-                # increment Left
+        for right in range(len(s)):
+            while s[right] in substring:
+                substring.discard(s[left])
                 left += 1
-                # while the char at previous Left not equal to char at Right AND Left < Right
-                while s[left - 1] != s[right] and left < right:
-                    # remove char at Left from charSet
-                    charSet.remove(s[left])
-                    # increment Left
-                    left += 1
 
-                # add char at Right to charSet
-                charSet.add(s[right])
-            # else
-            else:
-                # add char at Right to charSet
-                charSet.add(s[right])
-                # set new maxLength
-                maxLength = max(maxLength, len(charSet))
+            substring.add(s[right])
+            result = max(result, len(substring))
 
-        return maxLength
+        return result
 
