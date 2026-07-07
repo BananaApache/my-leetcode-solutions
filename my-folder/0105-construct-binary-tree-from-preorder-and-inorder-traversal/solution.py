@@ -5,31 +5,16 @@
 #         self.left = left
 #         self.right = right
 class Solution:
-
     def buildTree(self, preorder: List[int], inorder: List[int]) -> Optional[TreeNode]:
-        
-        def build(preorder, inorder):
-            # base case
-            if len(preorder) == 0: 
-                return None
+        # base case
+        if not preorder or not inorder:
+            return None
 
-            root = TreeNode(preorder[0])
-            rootIndex = inorder.index(preorder[0])
-            left = preorder[1 : rootIndex + 1]
-            right = preorder[rootIndex + 1 : ]
+        root = TreeNode(preorder[0])
+        rootIndex = inorder.index(preorder[0])
 
-            root.left = build(left, inorder[:rootIndex])
-            root.right = build(right, inorder[rootIndex + 1:])
+        root.left = self.buildTree(preorder[1 : rootIndex + 1], inorder[0 : rootIndex])
+        root.right = self.buildTree(preorder[rootIndex + 1 : ], inorder[rootIndex + 1 : ])
 
-            return root
-
-        return build(preorder, inorder)
-
-        # root = preorder[0]
-        # get the index of root from inorderSet
-        # items in left subtree are 0..index
-        # items in right subtree are index..len(inorder)
-
-
-
+        return root
 
