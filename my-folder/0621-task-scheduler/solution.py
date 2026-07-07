@@ -1,29 +1,33 @@
 class Solution:
     def leastInterval(self, tasks: List[str], n: int) -> int:
         
-        # always be taking task with highest frequency
+        time = 0
+        waiting = deque()
 
-        freqMap = defaultdict(int)
+        freq = {}
         for task in tasks:
-            freqMap[task] += 1
+            freq[task] = freq.get(task, 0) + 1
         
-        maxHeap = list(freqMap.values())
+        maxHeap = list(freq.values())
         heapq.heapify_max(maxHeap)
 
-        q = deque()
-        time = 0
+        while maxHeap or waiting: # stop when BOTH maxHeap empty AND waiting empty
+            # check waiting and try to add to maxHeap
+            if waiting:
+                first = waiting[0] # <tuple> (tasks left, time that can be added back)
 
-        while q or maxHeap:
+                if first[1] == time: # if its time, add back and remove from waiting
+                    waiting.popleft()
+                    heapq.heappush_max(maxHeap, first[0])
+
+            if maxHeap:
+                tasksLeft = heapq.heappop_max(maxHeap)
+                
+                if tasksLeft > 1:
+                    waiting.append( (tasksLeft - 1, time + n + 1) )
+
             time += 1
-
-            if len(maxHeap) > 0:
-                taskCount = heapq.heappop_max(maxHeap)
-                if taskCount - 1 != 0:
-                    q.append( (taskCount - 1, time + n) )
-
-            if q and q[0][1] == time:
-                taskCount, _ = q.popleft()
-                heapq.heappush_max(maxHeap, taskCount)
-
+                
+                
         return time
 
