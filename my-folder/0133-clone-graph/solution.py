@@ -9,27 +9,23 @@ class Node:
 from typing import Optional
 class Solution:
     def cloneGraph(self, node: Optional['Node']) -> Optional['Node']:
-
-        if node is None:
+        
+        if not node:
             return None
 
         old2new = {}
 
-        def bfs(start):
-            q = deque([start])
-            old2new.update( {start : Node(start.val)} )
+        old2new[node] = Node(node.val)
+        q = deque([node])
 
-            while q:
-                node = q.popleft()
-                for neighbor in node.neighbors:
-                    if neighbor not in old2new:
-                        q.append(neighbor)
-                        old2new[neighbor] = Node(neighbor.val)
-                        
-                    old2new[node].neighbors.append(old2new[neighbor])
+        while q:
+            newNode = q.popleft()
+            
+            for neighbor in newNode.neighbors:
+                if neighbor not in old2new:
+                    old2new[neighbor] = Node(neighbor.val)
+                    q.append(neighbor)
+                old2new[newNode].neighbors.append(old2new[neighbor])
 
-        bfs(node)
-        
         return old2new[node]
-
 
