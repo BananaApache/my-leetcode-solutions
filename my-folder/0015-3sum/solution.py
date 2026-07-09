@@ -1,25 +1,32 @@
 class Solution:
     def threeSum(self, nums: list[int]) -> list[list[int]]:
-
+        
         nums.sort()
+
         result = []
-        for index in range(len(nums)):
-            if index > 0 and nums[index - 1] == nums[index]:
+
+        prev = None
+        for index in range(len(nums) - 2):
+            if nums[index] == prev:
                 continue
 
+            target = 0 - nums[index]
             left = index + 1
             right = len(nums) - 1
-            target = 0 - nums[index]
+
             while left < right:
-                if nums[left] + nums[right] < target:
+                total = nums[left] + nums[right]
+                if total < target:
                     left += 1
-                elif nums[left] + nums[right] > target:
+                elif total > target:
                     right -= 1
                 else:
-                    result.append( (nums[index], nums[left], nums[right]) )
-                    left += 1
-                    while nums[left] == nums[left - 1] and left < right:
-                        left += 1
-
+                    result.append( [nums[index], nums[left], nums[right]] )
+                    curr = nums[right]
+                    while right > 0 and nums[right] == curr:
+                        right -= 1 
+            
+            prev = nums[index]
+            
         return result
 
