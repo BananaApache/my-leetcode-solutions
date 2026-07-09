@@ -1,29 +1,40 @@
 class Solution:
     def productExceptSelf(self, nums: List[int]) -> List[int]:
-
-        # get the total products to the left
-
-        preProducts = [1]
-        for index in range(1, len(nums)):
-            preProducts.append( preProducts[index - 1] * nums[index - 1] )
-
-        print(preProducts)
         
-        # get the total products to the right
-            # by reversing initial array
-
-        postProducts = [1]
-        reversedNums = nums[::-1]
-        for index in range(1, len(reversedNums)):
-            postProducts.append( postProducts[index - 1] * reversedNums[index - 1] )
-
-        postProducts = postProducts[::-1]
-
-        # loop through indexes and multiply item at index left times right
-        result = []
+        result = [] # will be post
+        count = 1
         for index in range(len(nums)):
-            result.append(preProducts[index] * postProducts[index])
+            result.append(count * nums[index])
+            count = result[index]
+        
+        # nums [1,2,3,4 ]
+        # post [1,2,6,24]
+
+        count = 1
+        for index in range(len(result) - 1, 0, -1):
+            result[index] = result[index - 1] * count
+            count = count * nums[index]
+        
+        result[0] = count
 
         return result
 
+        # post = [1] * (len(nums) + 1)
+        # pre = [1] * (len(nums) + 1)
+
+        # count = 1
+        # for index in range(len(nums)):
+        #     post[index + 1] = count * nums[index]
+        #     count = post[index + 1]
+
+        # count = 1
+        # for index in range(len(nums) - 1, -1, -1):
+        #     pre[index] = count * nums[index]
+        #     count = pre[index]
+
+        # result = []
+        # for index in range(1, len(nums) + 1):
+        #     result.append(post[index - 1] * pre[index])
+        
+        # return result
 
