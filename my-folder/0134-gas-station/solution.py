@@ -1,17 +1,25 @@
 class Solution:
     def canCompleteCircuit(self, gas: List[int], cost: List[int]) -> int:
         
-        if sum(gas) < sum(cost):
-            return -1
-
         total = 0
-        result = 0
+        differences = []
 
         for index in range(len(gas)):
-            total += gas[index] - cost[index]
-            if total < 0:
-                total = 0
-                result = index + 1
+            differences.append(gas[index] - cost[index])
+            total += differences[index]
+        
+        if total < 0:
+            return -1
+        
+        runningTotal = 0
+        result = 0
+
+        for start in range(len(differences)):
+            runningTotal += differences[start]
+            if runningTotal < 0:
+                runningTotal = 0
+                result = start + 1
         
         return result
+            
 
