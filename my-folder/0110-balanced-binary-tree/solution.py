@@ -5,20 +5,22 @@
 #         self.left = left
 #         self.right = right
 class Solution:
-
-    def isSubtreeBalanced(self, root):
-        if root is None:
-            return [True, 0]
-
-        left = self.isSubtreeBalanced(root.left)
-        right = self.isSubtreeBalanced(root.right)
-
-        balanced = (left[0] and right[0]) and (abs(left[1] - right[1]) <= 1)
-        return [balanced, 1 + max(left[1], right[1])]
-        
     def isBalanced(self, root: Optional[TreeNode]) -> bool:
-        if root is None:
+        
+        def getDepth(root):
+            # base case
+            if not root:
+                return 0
+            
+            return 1 + max(getDepth(root.left), getDepth(root.right))
+
+        # base case
+        if not root:
             return True
         
-        return self.isSubtreeBalanced(root)[0]
+        rootBalanced = True
+        if abs(getDepth(root.left) - getDepth(root.right)) > 1:
+            return False
         
+        return rootBalanced and self.isBalanced(root.left) and self.isBalanced(root.right)
+
