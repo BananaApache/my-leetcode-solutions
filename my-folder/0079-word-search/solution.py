@@ -1,35 +1,32 @@
 class Solution:
     def exist(self, board: List[List[str]], word: str) -> bool:
-        maxRow, maxCol = len(board), len(board[0])
 
-        def backtrack(row, col, seen, index):
-            if index == len(word):
-                return True
-            if (row < 0 or row >= maxRow or 
-                col < 0 or col >= maxCol or
-                (row, col) in seen or 
-                board[row][col] != word[index]):
-                return False
-            
-            seen.add((row, col))
-            found = (backtrack(row - 1, col, seen, index + 1) or
-                     backtrack(row + 1, col, seen, index + 1) or
-                     backtrack(row, col - 1, seen, index + 1) or
-                     backtrack(row, col + 1, seen, index + 1))
-            seen.remove((row, col))
-            return found
-
-        positions = []
-
-        for row in range(len(board)):
-            for col in range(len(board[0])):
-                if board[row][col] == word[0]:
-                    positions.append( (row, col) )
-
-        for position in positions:
-            row, col = position
-            if backtrack(row, col, set(), 0):
-                return True
+        rows = len(board)
+        cols = len(board[0])
         
+        def backtrack(row, col, wordIndex, seen):
+            # base case
+            if board[row][col] != word[wordIndex]:
+                return False
+            if wordIndex == len(word) - 1:
+                return True
+            
+            seen.add( (row, col) )
+            for addRow, addCol in [ [1,0],[0,1],[-1,0],[0,-1] ]:
+                newRow, newCol = row + addRow, col + addCol
+                if newRow in range(rows) and newCol in range(cols) and (newRow, newCol) not in seen:
+                    if backtrack(newRow, newCol, wordIndex + 1, seen):
+                        return True
+            
+            seen.remove( (row, col) )
+            return False
+            
+        for row in range(rows):
+            for col in range(cols):
+                if board[row][col] == word[0]:
+                    seen = set()
+                    if backtrack(row, col, 0, seen):
+                        return True
+
         return False
 
