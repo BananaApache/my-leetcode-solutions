@@ -6,8 +6,8 @@ class Solution:
         
         left = 0
         right = len(nums) - 1
-
         index = 0
+
         while index <= right:
             if nums[index] == 0:
                 nums[left], nums[index] = nums[index], nums[left]
@@ -18,18 +18,4 @@ class Solution:
             elif nums[index] == 2:
                 nums[right], nums[index] = nums[index], nums[right]
                 right -= 1
-
         
-        # O(n) space, O(n) time
-        # freq = defaultdict(int)
-        # for num in nums:
-        #     freq[num] += 1
-        
-        # index = 0
-        # for num in range(3):
-        #     val = freq[num]
-        #     while val:
-        #         nums[index] = num
-        #         val -= 1
-        #         index += 1
-
