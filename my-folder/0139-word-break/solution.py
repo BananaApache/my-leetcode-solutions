@@ -1,39 +1,36 @@
 class Solution:
     def wordBreak(self, s: str, wordDict: List[str]) -> bool:
         
+        # state: index
+        # decisions: choose from lengths in wordDict
+        # dfs(index): can s[index : -1] be broken down into words from wordDict
+        # recurrence: If there exists a valid word starting here and the rest of the string can also be segmented, then this state is True.
 
-        dp = [False] * len(s)
-        dp.append(True)
+        wordDict = set(wordDict)
+        lengths = set()
+        cache = {}
 
-        for index in range(len(dp) - 2, -1, -1):
-            for word in wordDict:
-                if s[index : ].startswith(word):
-                    dp[index] = dp[index + len(word)]
-                if dp[index]:
-                    break
+        for word in wordDict:
+            lengths.add(len(word))
         
-        return dp[0]
-
-        # BACKTRACKING DFS APPROACH, NO CACHE
-        # # base cases:
-        # # - doesnt start with word
-        # # - length of word node longer than s
-
-        # maxLength = len(s)
-
-        # def dfs(word):
-        #     # base cases
-        #     if not s.startswith(word):
-        #         return False
-        #     elif len(word) == maxLength:
-        #         return word == s
+        def dfs(index):
+            # base case
+            if index == len(s):
+                return True # yes can be broken down because it is empty
+            if index in cache:
+                return cache[index]
             
-        #     for subword in wordDict:
-        #         newWord = word + subword
-        #         if len(newWord) <= maxLength and dfs(newWord):
-        #             return True
+            # canBreak = False
 
-        #     return False
+            for length in lengths:
+                # before i jump, have to check that current substring is in wordDict
+                if (index + length) <= len(s) and s[index : index + length] in wordDict:
+                    if dfs(index + length):
+                        cache[index] = True
+                        return True
 
-        # return dfs("")
+            cache[index] = False
+            return False
+        
+        return dfs(0)
 
