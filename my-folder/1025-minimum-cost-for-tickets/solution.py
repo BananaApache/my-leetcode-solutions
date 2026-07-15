@@ -1,27 +1,31 @@
 class Solution:
     def mincostTickets(self, days: List[int], costs: List[int]) -> int:
         
-        #           (cost, day)
-        days.append((0, 399))
-        
-        for index in range(len(days) - 2, -1, -1):
-            
-            minCost = costs[0] + days[index + 1][0]
-            foundWeek = False
-            foundMonth = False
-            for nextIndex in range(index + 1, len(days)):
-                # 7 day
-                if not foundWeek and days[index] + 7 <= days[nextIndex][1]:
-                    minCost = min(minCost, costs[1] + days[nextIndex][0])
-                    foundWeek = True
-                if days[index] + 30 <= days[nextIndex][1]:
-                    minCost = min(minCost, costs[2] + days[nextIndex][0])
-                    foundMonth = True
-                    break
-            
-            days[index] = (minCost, days[index])
+        # state: index so far
+        # dfs(index): returns minimum cost to travel days from days[index : end]
+        # recurrence: choose minimum from trying [1,7,30] passes and add to current cost (try cache too)
+        # cache[index]: returns minimum cost to travel days from days[index : end]
 
-        print(days)
+        cache = {}
+        dayPass = [1, 7, 30]
 
-        return days[0][0]
+        def dfs(index):
+            # base case
+            if index >= len(days):
+                return 0
+            if index in cache:
+                return cache[index]
+            
+            newCost = float('inf')
+            for dayIndex in range(len(dayPass)):
+                newIndex = index
+                while newIndex < len(days) and days[newIndex] < (days[index] + dayPass[dayIndex]): # stop when days[index] >= days[index] + dayPassLength
+                    newIndex += 1
+                
+                newCost = min( newCost, costs[dayIndex] + dfs(newIndex) )
+            
+            cache[index] = newCost
+            return newCost
+
+        return dfs(0)
 
