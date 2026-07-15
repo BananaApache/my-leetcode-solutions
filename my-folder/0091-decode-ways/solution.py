@@ -1,56 +1,28 @@
 class Solution:
     def numDecodings(self, s: str) -> int:
-
-        if s == "0":
-            return 0
-
-        dp = [0] * len(s)
         
-        if s[-1] != 0:
-            dp[-1] = 1
+        # state: index -> total decodings from index to end
+        # cache: index -> total decodings
 
-        dp.append(1)
-        dp.append(0)
+        cache = {}
 
-        for index in range(len(s) - 1, -1, -1):
-            if int(s[index]) == 0:
-                dp[index] = 0
-            elif int(s[index : index + 2]) > 26:
-                dp[index] = dp[index + 1]
-            else:
-                dp[index] = dp[index + 1] + dp[index + 2]
-        
-        return dp[0]
+        def dfs(index):
+            # base case
+            if index >= len(s):
+                return 1 # got to end successfully
 
+            if s[index] == '0':
+                return 0
+            if index in cache:
+                return cache[index]
+            
+            decodings = dfs(index + 1)
 
-        # OLD TRIED SOLUTION
-        
-        # hashmap = {}
+            if index + 1 < len(s) and int(s[index : index + 2]) in range(10, 27):
+                decodings += dfs(index + 2)
+            
+            cache[index] = decodings
+            return decodings
 
-        # def dfs(startIndex, endIndex):
-        #     # base case
-        #     if endIndex > len(s):
-        #         return 0
-        #     elif endIndex == len(s):
-        #         hashmap[ (startIndex, endIndex) ] = 1
-        #         return 1
-
-        #     if int(s[startIndex + 1 : endIndex + 1]) > 26:
-        #         return 0
-
-        #     if (endIndex + 1, endIndex + 1) in hashmap:
-        #         leftDecodings = hashmap[ (endIndex + 1, endIndex + 1) ]
-        #     else:
-        #         leftDecodings = dfs(endIndex + 1, endIndex + 1)
-        #         hashmap[ (endIndex + 1, endIndex + 1) ] = leftDecodings
-        #     if (endIndex + 1, endIndex + 2) in hashmap:
-        #         rightDecodings = hashmap[ (endIndex + 1, endIndex + 2) ]
-        #     else:
-        #         rightDecodings = dfs(endIndex + 1, endIndex + 2)
-        #         hashmap[ (endIndex + 1, endIndex + 2) ] = rightDecodings
-
-
-        #     return leftDecodings + rightDecodings
-        
-        # return dfs(0, 0) + dfs(0, 1)
+        return dfs(0)
 
