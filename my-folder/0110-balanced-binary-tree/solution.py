@@ -7,20 +7,21 @@
 class Solution:
     def isBalanced(self, root: Optional[TreeNode]) -> bool:
         
-        def getDepth(root):
+        def dfs(root):
             # base case
             if not root:
                 return 0
-            
-            return 1 + max(getDepth(root.left), getDepth(root.right))
 
-        # base case
-        if not root:
-            return True
-        
-        rootBalanced = True
-        if abs(getDepth(root.left) - getDepth(root.right)) > 1:
-            return False
-        
-        return rootBalanced and self.isBalanced(root.left) and self.isBalanced(root.right)
+            leftHeight = dfs(root.left)
+            rightHeight = dfs(root.right)
+
+            if leftHeight == -1 or rightHeight == -1:
+                return -1
+            
+            if abs(leftHeight - rightHeight) > 1:
+                return -1
+
+            return 1 + max(dfs(root.left), dfs(root.right))
+
+        return dfs(root) != -1
 
