@@ -7,14 +7,20 @@
 class Solution:
     def isValidBST(self, root: Optional[TreeNode]) -> bool:
         
-        def isValid(root, left, right):
+        # recurrence: 
+        # traverse left -> update upper bound
+        # traverse right -> update lower bound
+
+        def dfs(root, lower, upper):
             # base case
-            if root is None:
+            if not root:
                 return True
-
-            # print(f"{left} < {root.val} < {right}")
-
-            return (left < root.val and root.val < right) and isValid(root.left, left, root.val) and isValid(root.right, root.val, right)
+            
+            if not (lower < root.val and root.val < upper):
+                return False
+            
+            return dfs(root.left, lower, root.val) and dfs(root.right, root.val, upper)
         
-        return isValid(root.left, -float('inf'), root.val) and isValid(root.right, root.val, float('inf'))
+        return dfs(root, -float('inf'), float('inf'))
+
 
