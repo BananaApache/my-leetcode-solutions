@@ -7,24 +7,25 @@
 class Solution:
     def rightSideView(self, root: Optional[TreeNode]) -> List[int]:
         
-        from collections import deque
-
         result = []
-        q = deque([root])
 
-        while q:
-            level = []
-            for _ in range(len(q)):
-                node = q.popleft()
+        # dfs(root, index): top down traversal, setting each index of result and overriding if more to the right
 
-                if node:
-                    level.append(node.val)
+        def dfs(root, index):
+            # base case
+            if not root:
+                return
 
-                    q.append(node.left)
-                    q.append(node.right)
+            if index == len(result):
+                result.append(root.val)
+            elif index < len(result):
+                result[index] = root.val
+            
+            dfs(root.left, index + 1)
+            dfs(root.right, index + 1)
 
-            if level:
-                result.append(level[-1])
-
+            return
+        
+        dfs(root, 0)
         return result
 
