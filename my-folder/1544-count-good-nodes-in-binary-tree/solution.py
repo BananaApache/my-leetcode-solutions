@@ -6,20 +6,28 @@
 #         self.right = right
 class Solution:
     def goodNodes(self, root: TreeNode) -> int:
+        
+        # child needs max value so far from parent
+        # dfs(root, maximum): traversing down and comparing value to maximum
+        # recurrence: update result if current is greater than or equal to maximum, update new max, traverse children
 
         result = 0
-        stack = [(root, root.val)]
 
-        while stack:
-            node, maxVal = stack.pop()
+        def dfs(root, maximum):
+            nonlocal result
+            # base case
+            if not root:
+                return
+            
+            # compare 
+            if root.val >= maximum:
+                result += 1
+                maximum = root.val
+            dfs(root.left, maximum)
+            dfs(root.right, maximum)
 
-            if node:
-                if node.val >= maxVal:
-                    result += 1
-                    maxVal = node.val
-
-                stack.append( (node.left, maxVal) )
-                stack.append( (node.right, maxVal) )
-
+            return
+        
+        dfs(root, -float('inf'))
         return result
 
