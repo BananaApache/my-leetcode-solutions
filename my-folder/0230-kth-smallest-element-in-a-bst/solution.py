@@ -7,27 +7,27 @@
 class Solution:
     def kthSmallest(self, root: Optional[TreeNode], k: int) -> int:
         
-        # minimum information is current index
-        # dfs(root): while going back up, updates index and will return when k == index the correct node
-        # left -> root -> right
+        # dfs(node): traverses left - root - right ,incrementing index until gotten to k
+        # should return True when found
 
         index = 0
-
         def dfs(root):
             nonlocal index
+
             # base case
             if not root:
-                return None
-            
+                return False
+
             left = dfs(root.left)
-            if left is not None:
+            if left is not False:
                 return left
             index += 1
             if index == k:
                 return root.val
             right = dfs(root.right)
-            if right is not None:
+            if right is not False:
                 return right
-
+            return False
+        
         return dfs(root)
 
