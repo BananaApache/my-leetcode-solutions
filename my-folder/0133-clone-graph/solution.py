@@ -15,17 +15,17 @@ class Solution:
 
         old2new = {}
 
-        old2new[node] = Node(node.val)
         q = deque([node])
-
         while q:
-            newNode = q.popleft()
-            
-            for neighbor in newNode.neighbors:
-                if neighbor not in old2new:
-                    old2new[neighbor] = Node(neighbor.val)
-                    q.append(neighbor)
-                old2new[newNode].neighbors.append(old2new[neighbor])
+            oldNode = q.popleft()
+            if oldNode not in old2new:
+                old2new[oldNode] = Node(oldNode.val)
+
+            for oldNeighbor in oldNode.neighbors:
+                if oldNeighbor not in old2new:
+                    old2new[oldNeighbor] = Node(oldNeighbor.val)
+                    q.append(oldNeighbor)
+                old2new[oldNode].neighbors.append(old2new[oldNeighbor])
 
         return old2new[node]
 
