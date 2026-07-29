@@ -1,40 +1,33 @@
 class Solution:
     def orangesRotting(self, grid: List[List[int]]) -> int:
         
-        rows, cols = len(grid), len(grid[0])
+        # bfs(row, col): will traverse 4 directionally from a 2, converting 1s to 2s, updating minutes
 
+        rows, cols = len(grid), len(grid[0])
+        totalFresh = 0
         q = deque()
-        totalOranges = 0
-        rottens = []
 
         for row in range(rows):
             for col in range(cols):
-                if grid[row][col] == 2:
-                    rottens.append( (row, col) )
-                elif grid[row][col] == 1:
-                    totalOranges += 1
+                if grid[row][col] == 1:
+                    totalFresh += 1
+                elif grid[row][col] == 2:
+                    q.append( (row, col, 0) )
         
-        q.append(rottens)
-        result = -1
-
-        # bfs
+        minutes = 0
         while q:
-            rottens = q.popleft()
-            result += 1
-            newRottens = []
-            for row, col in rottens:
-                for addRow, addCol in [[1,0],[0,1],[-1,0],[0,-1]]:
-                    newRow, newCol = row + addRow, col + addCol
-                    if newRow in range(rows) and newCol in range(cols) and grid[newRow][newCol] == 1:
-                        grid[newRow][newCol] = 2
-                        totalOranges -= 1
-                        newRottens.append( (newRow, newCol) )
+            row, col, time = q.popleft()
 
-            if newRottens:
-                q.append(newRottens)
+            for addRow, addCol in [ [1,0],[0,1],[-1,0],[0,-1] ]:
+                newRow, newCol = row + addRow, col + addCol
+                if (0<=newRow<rows and 0<=newCol<cols) and grid[newRow][newCol] == 1:
+                    grid[newRow][newCol] = 2
+                    totalFresh -= 1
+                    q.append( (newRow, newCol, time + 1) )
+            minutes = time
         
-        if totalOranges > 0:
+        if totalFresh > 0:
             return -1
         else:
-            return result
+            return minutes
 
