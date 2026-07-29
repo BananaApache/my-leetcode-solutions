@@ -1,45 +1,46 @@
 class Solution:
     def pacificAtlantic(self, heights: List[List[int]]) -> List[List[int]]:
-
-        rows, cols = len(heights), len(heights[0])  
-
-        def inP(row, col):
-            return row == 0 or col == 0
-        def inA(row, col):   
-            return row == rows - 1 or col == cols - 1
         
-        # bfs
-        def canReachBoth(startRow, startCol):
-            q = deque( [(startRow, startCol)] )
-            visited = { (startRow, startCol) }
+        # start from atlantic, add the heights you can reach to set
+        # start from pacific , add the heights you can reach to set
+        # return intersection of sets as list
 
-            reachedP = inP(startRow, startCol)
-            reachedA = inA(startRow, startCol)
+        # working backward, queue entry will be row, col
+        # enqueue if next height greater than or equal
 
-            if reachedP and reachedA:
-                return True
+        rows, cols = len(heights), len(heights[0])
+
+        reachFromPacific = set()
+        reachFromAtlantic = set()
+
+        def bfs(startRow, startCol, reachSet):
+            q = deque([ (startRow, startCol) ])
+            if (startRow, startCol) in reachSet:
+                return
+            reachSet.add( (startRow, startCol) )
 
             while q:
                 row, col = q.popleft()
 
-                for addRow, addCol in [[1,0],[0,1],[-1,0],[0,-1]]:
-                    newRow, newCol = row+addRow, col+addCol
-                    if newRow in range(rows) and newCol in range(cols) and (newRow, newCol) not in visited and heights[newRow][newCol] <= heights[row][col]:
-                        reachedP = reachedP or inP(newRow, newCol)
-                        reachedA = reachedA or inA(newRow, newCol)
-                        if reachedP and reachedA:
-                            return True
-
+                for addRow, addCol in [ [1,0],[-1,0],[0,1],[0,-1] ]:
+                    newRow, newCol = row + addRow, col + addCol
+                    if (0<=newRow<rows and 0<=newCol<cols) and heights[newRow][newCol] >= heights[row][col] and (newRow, newCol) not in reachSet:
                         q.append( (newRow, newCol) )
-                        visited.add( (newRow, newCol) )
+                        reachSet.add( (newRow, newCol) )
 
-            return reachedP and reachedA
-
-        result = []
+        # pacific
         for row in range(rows):
-            for col in range(cols):
-                if canReachBoth(row, col):
-                    result.append( [row, col] )
+            bfs(row, 0, reachFromPacific)
         
-        return result
+        for col in range(cols):
+            bfs(0, col, reachFromPacific)
+
+        # atlantic
+        for row in range(rows):
+            bfs(row, cols - 1, reachFromAtlantic)
+        
+        for col in range(cols):
+            bfs(rows - 1, col, reachFromAtlantic)
+
+        return list( reachFromPacific & reachFromAtlantic )
 
