@@ -1,40 +1,34 @@
 class Solution:
     def maxAreaOfIsland(self, grid: List[List[int]]) -> int:
         
-        rows, cols = len(grid), len(grid[0])
-
-        result = 0
-
-        def getNeighbors(row, col):
-            neighbors = []
-            directions = [ (1,0), (0,1), (-1,0), (0,-1) ]
-            for addRow, addCol in directions:
-                newRow, newCol = row + addRow, col + addCol
-                if newRow in range(rows) and newCol in range(cols):
-                    neighbors.append( (newRow, newCol) )
+        # bfs(row, col): traverses 1s only, updates to 0s, adds to some area, updates result at end
             
-            return neighbors
-
-        def bfs(q):
-            grid[q[0][0]][q[0][1]] = "X"
+        rows, cols = len(grid), len(grid[0])
+        result = 0
+        
+        def bfs(startRow, startCol):
+            nonlocal result
+            q = deque([ (startRow, startCol) ])
+            grid[startRow][startCol] = 0
             area = 1
 
             while q:
                 row, col = q.popleft()
-                for newRow, newCol in getNeighbors(row, col):
-                    if grid[newRow][newCol] == 1:
+
+                for addRow, addCol in [ [1,0],[0,1],[-1,0],[0,-1] ]:
+                    newRow, newCol = row + addRow, col + addCol
+                    if 0 <= newRow < rows and 0 <= newCol < cols and grid[newRow][newCol] == 1:
                         q.append( (newRow, newCol) )
-                        grid[newRow][newCol] = "X"
+                        grid[newRow][newCol] = 0
                         area += 1
             
-            return area
+            result = max(result, area)
 
         for row in range(rows):
             for col in range(cols):
                 if grid[row][col] == 1:
-                    area = bfs(deque([(row, col)]))
-                    result = max(result, area)
-
-        return result
+                    bfs(row, col)
         
+        return result
+
 
