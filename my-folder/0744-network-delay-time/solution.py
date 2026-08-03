@@ -1,32 +1,29 @@
 class Solution:
     def networkDelayTime(self, times: List[List[int]], n: int, k: int) -> int:
         
-        # SOUNDS LIKE DJIKSTRA
+        # take the max time
 
-        # maximum of shortest weighted path from k to all n nodes
+        adjMap = defaultdict(list) # (weight, node)
+        for u, v, w in times:
+            adjMap[u].append( (w, v) )
 
-        adjMap = defaultdict(list)
-        for a, b, time in times:
-            adjMap[a].append( (time, b) )
-
-        minHeap = [(0, k)]
-        heapq.heapify(minHeap)
-        visited = set()
         result = 0
-
+        minHeap = [ (0, k) ] # (weight, node)
+        seen = set()
+        heapq.heapify(minHeap)
         while minHeap:
-            time, node = heapq.heappop(minHeap)
-            if node in visited:
+            weight, node = heapq.heappop(minHeap)
+            if node in seen:
                 continue
+            seen.add(node)
+            result = max(result, weight)
 
-            visited.add(node)
-            result = max(result, time)
-            
-            for newTime, neighbor in adjMap[node]:
-                if neighbor not in visited: 
-                    heapq.heappush( minHeap, (newTime + time, neighbor) )
+            for newWeight, neighbor in adjMap[node]:
+                if neighbor not in seen:
+                    heapq.heappush(minHeap, (weight + newWeight, neighbor) )
 
-        if len(visited) == n:
+
+        if len(seen) == n:
             return result
         else:
             return -1
