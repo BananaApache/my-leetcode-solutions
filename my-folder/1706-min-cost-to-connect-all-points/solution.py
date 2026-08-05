@@ -1,30 +1,33 @@
 class Solution:
     def minCostConnectPoints(self, points: List[List[int]]) -> int:
+
+        # use minHeap to always get closest of a point
+        # add to seen only when we pop because pushing doesnt mean its shortest yet
         
-        # for every point
-        # find closest
+        def getDistance(x1, y1, x2, y2):
+            return abs( x2 - x1 ) + abs( y2 - y1 )
 
-        def getDistance(points1, points2):
-            return abs(points1[0] - points2[0]) + abs(points1[1] - points2[1])
-
-        minHeap = [ (0, points[0]) ] # ( distance, [x, y] )
+        seen = set()
+        minHeap = [ (0, (points[0][0], points[0][1]) ) ]
         heapq.heapify(minHeap)
-        visited = set()
-        totalDistance = 0
+        output = 0
 
         while minHeap:
-            if len(visited) == len(points):
-                break
-            distance, points1 = heapq.heappop(minHeap)
-            if (points1[0], points1[1]) in visited:
+            if len(seen) == len(points):
+                return output
+            distance, currPoints = heapq.heappop(minHeap)
+            x, y = currPoints
+
+            if (x, y) in seen:
                 continue
-            totalDistance += distance
-            visited.add( (points1[0], points1[1]) )
 
-            for points2 in points:
-                if (points2[0], points2[1]) not in visited:
-                    newDistance = getDistance(points1, points2)
-                    heapq.heappush(minHeap, (newDistance, points2) )
+            output += distance
+            seen.add( (x, y) )
 
-        return totalDistance
+            
+            for x2, y2 in points:
+                if (x2, y2) not in seen:
+                    heapq.heappush(minHeap, (getDistance(x, y, x2, y2), (x2, y2)) )
+        
+        return output
 
