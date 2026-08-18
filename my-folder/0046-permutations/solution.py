@@ -18,4 +18,3 @@ class Solution:
         for index in range(len(nums)):
             dfs([nums[index]], nums[:index]+nums[index+1:])
         return result
-
