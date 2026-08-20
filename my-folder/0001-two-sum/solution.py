@@ -1,22 +1,16 @@
-class Solution(object):
-    def twoSum(self, nums, target):
-        """
-        :type nums: List[int]
-        :type target: int
-        :rtype: List[int]
-        """
-        
-        #  0 1  2 3
-        # [2,11,6,7], target = 9
-        #                   
-        # 7->0,-2->1,3->2
+class Solution:
+    def twoSum(self, nums: List[int], target: int) -> List[int]:
+        # keep track of previous needed leftover in hashmap for O(1) lookup
+
+        # nums = [2,11,15,7]
+        #         0 1  2  3
+        # hashmap = 2: 0, 11: 1           
+        # target = 9
 
         hashmap = {}
-
         for index in range(len(nums)):
-            num = nums[index]
-            if num not in hashmap:
-                hashmap[target - num] = index
+            difference = target - nums[index]
+            if difference in hashmap:
+                return [hashmap[difference], index]
             else:
-                return [index, hashmap[num]]
-
+                hashmap[nums[index]] = index
