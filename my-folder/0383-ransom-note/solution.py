@@ -1,17 +1,14 @@
 class Solution:
     def canConstruct(self, ransomNote: str, magazine: str) -> bool:
-
-        if len(ransomNote) > len(magazine):
-            return False
-
-        magazine = list(magazine)
+        
+        freqMap = defaultdict(int)
+        for letter in magazine:
+            freqMap[letter] += 1
         
         for letter in ransomNote:
-
-            if letter not in magazine:
-                return False # not there so invalid ransom note
-            
-            magazine[magazine.index(letter)] = '#'
-
+            if freqMap[letter] == 0:
+                return False
+            else:
+                freqMap[letter] -= 1
         return True
 
