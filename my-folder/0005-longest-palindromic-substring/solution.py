@@ -1,23 +1,29 @@
 class Solution:
     def longestPalindrome(self, s: str) -> str:
+        
+        # can use two pointer in even or odd cases
 
         result = ""
-        
         for index in range(len(s)):
-            # odd 
-            l, r = index, index
-            while l >= 0 and r < len(s) and s[l] == s[r]:
-                if (r - l + 1) > len(result):
-                    result = s[l : r + 1]
-                l -= 1
-                r += 1
+            # odd
+            left = index
+            right = index
+            while (0<=left and right<len(s)) and s[left] == s[right]:
+                left -= 1
+                right += 1
+            left += 1
+            right -= 1
+            if right - left + 1 >= len(result):
+                result = s[left : right + 1]
             
-            l, r = index, index + 1
-            while l >= 0 and r < len(s) and s[l] == s[r]:
-                if (r - l + 1) > len(result):
-                    result = s[l : r + 1]
-                l -= 1
-                r += 1
-
+            # even
+            left = index
+            right = index+1
+            while (0<=left and right<len(s)) and s[left] == s[right]:
+                left -= 1
+                right += 1
+            left += 1
+            right -= 1
+            if right - left + 1 >= len(result):
+                result = s[left : right + 1]
         return result
-
