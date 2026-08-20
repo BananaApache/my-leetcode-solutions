@@ -10,6 +10,10 @@ from typing import Optional
 class Solution:
     def cloneGraph(self, node: Optional['Node']) -> Optional['Node']:
         
+        # can keep a map of old nodes to new nodes
+        # go through each node and its neighbors and connect them
+        # can use bfs to go through each neighbor
+
         if not node:
             return None
 
@@ -17,15 +21,15 @@ class Solution:
 
         q = deque([node])
         while q:
-            oldNode = q.popleft()
-            if oldNode not in old2new:
-                old2new[oldNode] = Node(oldNode.val)
+            curr = q.popleft()
+            if curr not in old2new:
+                old2new[curr] = Node(curr.val)
 
-            for oldNeighbor in oldNode.neighbors:
-                if oldNeighbor not in old2new:
-                    old2new[oldNeighbor] = Node(oldNeighbor.val)
-                    q.append(oldNeighbor)
-                old2new[oldNode].neighbors.append(old2new[oldNeighbor])
-
+            for neighbor in curr.neighbors:
+                if neighbor not in old2new:
+                    old2new[neighbor] = Node(neighbor.val)
+                    q.append(neighbor)
+                old2new[curr].neighbors.append(old2new[neighbor])
+                
         return old2new[node]
 
