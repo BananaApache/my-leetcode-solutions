@@ -7,42 +7,22 @@
 class Solution:
     def hasCycle(self, head: Optional[ListNode]) -> bool:
         
-        # # edge cases
-        # if not head:
-        #     return False
+        # seen = set()
+        # while head:
+        #     if head in seen:
+        #         return True
+        #     seen.add(head)
+        #     head = head.next
+        # return False
 
-        # foundDuplicate = False
-        # node = head
-
-        # # 3 2 0 -4
-        # #   1     
-
-        # # keep looping while node still exists and foundDuplicate is false
-        # while node and not foundDuplicate:
-        #     if not isinstance(node.val, tuple):
-        #         node.val = (node.val, True)
-        #     else:
-        #         foundDuplicate = True
-        #         break
-            
-        #     node = node.next
-
-        # return foundDuplicate
-
-
-
-
-        # better solution actuallly
         slow = head
         fast = head
 
-        while fast is not None and fast.next is not None:
-            
+        while fast and fast.next:
             slow = slow.next
             fast = fast.next.next
 
             if slow == fast:
                 return True
-
         return False
 
