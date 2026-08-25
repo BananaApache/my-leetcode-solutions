@@ -1,36 +1,30 @@
 class Solution:
     def wordBreak(self, s: str, wordDict: List[str]) -> bool:
         
-        # state: index
-        # decisions: choose from lengths in wordDict
-        # dfs(index): can s[index : -1] be broken down into words from wordDict
-        # recurrence: If there exists a valid word starting here and the rest of the string can also be segmented, then this state is True.
+        # length 9
+        # 0 1 2 3 4 5 6 7 8
+        # c a t s a n d o g
+        # F F F F F F F F F
+        # cats, dog, sand, and, cat
+        # lenghts = 4,3
 
         wordDict = set(wordDict)
         lengths = set()
-        cache = {}
-
         for word in wordDict:
             lengths.add(len(word))
-        
-        def dfs(index):
-            # base case
-            if index == len(s):
-                return True # yes can be broken down because it is empty
-            if index in cache:
-                return cache[index]
-            
-            # canBreak = False
+        # smallestLength = min(lengths)
 
+        dp = [False] * len(s)
+        dp.append(True)
+
+        for index in range(len(s), -1, -1):
             for length in lengths:
-                # before i jump, have to check that current substring is in wordDict
-                if (index + length) <= len(s) and s[index : index + length] in wordDict:
-                    if dfs(index + length):
-                        cache[index] = True
-                        return True
-
-            cache[index] = False
-            return False
+                if index + length <= len(s):
+                    subword = s[index : index + length]
+                    if subword in wordDict and not dp[index]:
+                        dp[index] = True and dp[index + length]
+                        
         
-        return dfs(0)
+        print(dp)
+        return dp[0]
 
