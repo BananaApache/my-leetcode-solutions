@@ -1,32 +1,32 @@
 class Solution:
     def threeSum(self, nums: list[int]) -> list[list[int]]:
         
-        nums.sort()
-
         result = []
 
+        #   0 1 2 3  4  5    len 6
+        # [-1,0,1,2,-1,-4]
+        #                 
+
+        nums.sort()
         prev = None
         for index in range(len(nums) - 2):
             if nums[index] == prev:
                 continue
-
-            target = 0 - nums[index]
             left = index + 1
             right = len(nums) - 1
-
+            target = 0 - nums[index]
             while left < right:
                 total = nums[left] + nums[right]
-                if total < target:
-                    left += 1
-                elif total > target:
+                if total > target:
                     right -= 1
+                elif total < target:
+                    left += 1
                 else:
-                    result.append( [nums[index], nums[left], nums[right]] )
-                    curr = nums[right]
-                    while right > 0 and nums[right] == curr:
-                        right -= 1 
-            
+                    result.append([ nums[index],nums[left],nums[right] ])
+                    tmp = nums[left]
+                    while left < len(nums) and nums[left] == tmp:
+                        left += 1
             prev = nums[index]
-            
+
         return result
 
