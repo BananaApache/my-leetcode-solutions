@@ -8,49 +8,32 @@ class Solution:
         """
         Do not return anything, modify head in-place instead.
         """
+        
+        slow = head
+        fast = head
+        while fast and fast.next:
+            slow = slow.next
+            fast = fast.next.next
 
-        # first make array of pointers to all nodes in order
-        nodes = []
-        node = head
-        while node:
-            nodes.append(node)
-            node = node.next
+        mid = slow.next
+        slow.next = None
 
-        #  0 1 2 3
-        # [1,2,3,4]
-        #    2 1   
-        #  1->4->2->3->None      
+        # reverse time
+        prev = None
+        while mid:
+            nextNode = mid.next
+            mid.next = prev
+            prev = mid
+            mid = nextNode
+        
+        node1 = head
+        node2 = prev
+        while node2:
+            nextNode1 = node1.next
+            nextNode2 = node2.next
+            node1.next = node2
+            node2.next = nextNode1
+            node1 = nextNode1
+            node2 = nextNode2
 
-        # [1]
-        #  3
-        #  
-
-        #  0 1
-        # [1,2]
-        #    3    
-        #  1->2->none     
-
-        #  0 1 2 3 4
-        # [1,2,3,4,5]
-        #      3     
-        #  1->5->2->4->3     
-
-        left = 0
-        right = len(nodes) - 1
-        while left < right:
-            # set L next to R
-            nodes[left].next = nodes[right]
-            # increment left
-            left += 1
-            if left < right:
-                nodes[right].next = nodes[left]
-            else:
-                nodes[right].next = None
-            # decrement right
-            right -= 1
-
-        if left == right:
-            nodes[right].next = None
-
-        head = nodes[0]
 
