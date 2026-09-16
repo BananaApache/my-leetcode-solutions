@@ -1,22 +1,20 @@
 class Solution:
-    def maxProduct(self, nums: List[int]) -> int:
+    def maxProduct(self, nums: list[int]) -> int:
         
-        #            max      min
-        # maxMins = [ (nums[0], nums[0]) ]
-        result = max(nums)
-        currentMax = 1
         currentMin = 1
+        currentMax = 1
+        result = max(nums)
 
-        for num in nums:
-            if num == 0:
-                currentMax = 1
+        for index in range(len(nums)):
+            if nums[index] == 0:
                 currentMin = 1
-            else:
-                tmp = num * currentMax
-                currentMax = max(tmp, num * currentMin, num)
-                currentMin = min(tmp, num * currentMin, num)
-            
-                result = max(result, currentMax)
+                currentMax = 1
+                continue
 
+            new = nums[index] * currentMax
+            currentMax = max(new, nums[index] * currentMin, nums[index])
+            currentMin = min(new, nums[index] * currentMin, nums[index])
+            result = max(result, currentMax)
+        
         return result
 
