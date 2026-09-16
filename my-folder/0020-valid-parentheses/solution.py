@@ -1,22 +1,21 @@
 class Solution:
     def isValid(self, s: str) -> bool:
         
-        stack = []
-        charMap = {
-            ")": "(",
-            "}": "{",
-            "]": "["
+        close2open = {
+            ')': '(',
+            ']': '[',
+            '}': '{'
         }
 
+        stack = []
         for char in s:
-            # opening bracket
-            if char not in charMap:
-                stack.append(char)
-            # closing bracket
-            else:
-                if not stack or stack[-1] != charMap[char]:
+            if char in close2open:
+                if stack and stack[-1] == close2open[char]:
+                    stack.pop()
+                else:
                     return False
-                stack.pop()
-        
+            else:
+                stack.append(char)
+
         return len(stack) == 0
 
