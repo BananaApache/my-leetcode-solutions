@@ -1,21 +1,19 @@
-name: Sync Leetcode
-
+name: sync leetcode 
 on:
   workflow_dispatch:
   schedule:
-    - cron: "0 8 * * *"
-
+    - cron: "0 8 * * 6"
 jobs:
-  build:
+  sync:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Sync
-        uses: joshcai/leetcode-sync@v1.7
+      - name: Sync LeetCode
+        uses: Priyanshujoshi7/leetcode-sync-sql-too@master
         with:
           github-token: ${{ github.token }}
           leetcode-csrf-token: ${{ secrets.LEETCODE_CSRF_TOKEN }}
           leetcode-session: ${{ secrets.LEETCODE_SESSION }}
-          destination-folder: my-folder
           verbose: true
-          commit-header: "[LeetCode Sync]"
+          sync-from: "2020-01-01"
+          filter-duplicate-secs: "0"
