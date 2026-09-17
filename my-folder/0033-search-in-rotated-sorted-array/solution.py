@@ -1,39 +1,29 @@
 class Solution:
-    def search(self, nums: List[int], target: int) -> int:
-        
+    def search(self, nums: list[int], target: int) -> int:
+
+        # which half is sorted
+
         left = 0
         right = len(nums) - 1
 
         while left <= right:
-            middle = (left + right) // 2
+            mid = (left + right) // 2
 
-            # case middle in LEFT portion
-            if nums[left] > nums[right] and nums[left] <= nums[middle]:
-                
-                if target > nums[middle] or (target < nums[middle] and target < nums[left]):
-                    left = middle + 1
-                elif target >= nums[left] and target < nums[middle]:
-                    right = middle - 1
-                else:
-                    return middle
+            if nums[mid] == target:
+                return mid
 
-            # case middle in RIGHT portion
-            elif nums[left] > nums[right] and nums[left] > nums[middle]:
-                
-                if target < nums[middle] or (target > nums[middle] and target > nums[right]):
-                    right = middle - 1
-                elif target > nums[middle] and target <= nums[right]:
-                    left = middle + 1
+            if nums[left] <= nums[mid]: # left half sorted
+                if nums[left] <= target and nums[mid] > target:
+                    # search left
+                    right = mid - 1
                 else:
-                    return middle
-            
-            else:
-                if target > nums[middle]:
-                    left = middle + 1
-                elif target < nums[middle]:
-                    right = middle - 1
+                    # search right
+                    left = mid + 1
+            elif nums[mid] <= nums[right]: # right half sorted
+                if nums[mid] <= target and nums[right] >= target:
+                    # search right
+                    left = mid + 1
                 else:
-                    return middle
-
+                    # search left
+                    right = mid - 1
         return -1
-
