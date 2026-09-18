@@ -1,46 +1,41 @@
 class Solution:
-    def pacificAtlantic(self, heights: List[List[int]]) -> List[List[int]]:
+    def pacificAtlantic(self, heights: list[list[int]]) -> list[list[int]]:
         
-        # start from atlantic, add the heights you can reach to set
-        # start from pacific , add the heights you can reach to set
-        # return intersection of sets as list
-
-        # working backward, queue entry will be row, col
-        # enqueue if next height greater than or equal
+        # run bfs on all pacific corners and atlantic corners
+        # add to corresponding seen after traversed that node
 
         rows, cols = len(heights), len(heights[0])
 
-        reachFromPacific = set()
-        reachFromAtlantic = set()
+        touchPacific = set()
+        touchAtlantic = set()
 
-        def bfs(startRow, startCol, reachSet):
-            q = deque([ (startRow, startCol) ])
-            if (startRow, startCol) in reachSet:
+        def bfs(startRow, startCol, seen):
+            if (startRow, startCol) in seen:
                 return
-            reachSet.add( (startRow, startCol) )
-
+            q = deque([(startRow, startCol)])
+            seen.add((startRow, startCol))
             while q:
                 row, col = q.popleft()
-
-                for addRow, addCol in [ [1,0],[-1,0],[0,1],[0,-1] ]:
-                    newRow, newCol = row + addRow, col + addCol
-                    if (0<=newRow<rows and 0<=newCol<cols) and heights[newRow][newCol] >= heights[row][col] and (newRow, newCol) not in reachSet:
+                for addRow, addCol in [[0,1],[1,0],[0,-1],[-1,0]]:
+                    newRow, newCol = row+addRow, col+addCol
+                    if newRow in range(rows) and newCol in range(cols) and (newRow, newCol) not in seen and heights[newRow][newCol] >= heights[row][col]:
                         q.append( (newRow, newCol) )
-                        reachSet.add( (newRow, newCol) )
-
+                        seen.add((newRow, newCol))
+        
         # pacific
         for row in range(rows):
-            bfs(row, 0, reachFromPacific)
-        
+            bfs(row, 0, touchPacific)
         for col in range(cols):
-            bfs(0, col, reachFromPacific)
+            bfs(0, col, touchPacific)
 
         # atlantic
         for row in range(rows):
-            bfs(row, cols - 1, reachFromAtlantic)
-        
+            bfs(row, cols - 1, touchAtlantic)
         for col in range(cols):
-            bfs(rows - 1, col, reachFromAtlantic)
+            bfs(rows - 1, col, touchAtlantic)
 
-        return list( reachFromPacific & reachFromAtlantic )
-
+        result = []
+        for row, col in touchPacific:
+            if (row, col) in touchAtlantic:
+                result.append([row, col])
+        return result
