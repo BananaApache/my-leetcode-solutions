@@ -1,27 +1,25 @@
 class Solution:
     def maxArea(self, height: List[int]) -> int:
         
-        # two pointers
-        # left at start, right at end
-        # keep moving shorter one
-        # updating max
-
-        def getArea(left, right):
-            return min(height[left], height[right]) * (right - left)
-
+        result = 0
         left = 0
         right = len(height) - 1
-        result = 0
+        
+        #  0 1 2 3 4 5 6 7 8     len 9
+        # [1,8,6,2,5,4,8,3,7]
+        #      1       2    
+        # result 49         
 
         while left < right:
-            shorter = min(height[left], height[right])
-            result = max(result, getArea(left, right))
+            area = min(height[left], height[right]) * (right - left)
+            result = max(area, result)
 
+            # left smaller
             if height[left] <= height[right]:
-                while left < right and height[left] <= shorter:
-                    left += 1
+                left += 1
+            # right smaller
             else:
-                while left < right and height[right] <= shorter:
-                    right -= 1
-        
+                right -= 1
+
         return result
+
