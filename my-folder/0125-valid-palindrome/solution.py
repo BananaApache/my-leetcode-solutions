@@ -1,15 +1,27 @@
 class Solution:
     def isPalindrome(self, s: str) -> bool:
         
-        s = s.lower()
-        
-        alphabet = "abcdefghijklmnopqrstuvzwxyz0123456789"
-        
-        alphanums = ""
+        valids = "abcdefghijklmnopqrstuvwxyz0123456789"
+        valids = set(valids)
 
-        for letter in s:
-            if letter in alphabet:
-                alphanums += letter
+        newS = ""
+        for char in s:
+            if char.lower() in valids:
+                newS += char.lower()
 
-        return alphanums == alphanums[::-1]
-        
+        left = 0
+        right = len(newS) - 1
+
+        while left <= right:
+            # while left < len(s) and s[left].lower() not in valids:
+            #     left += 1
+            # while right >= 0 and s[right].lower() not in valids:
+            #     right -= 1
+            
+            if newS[left] != newS[right]:
+                return False
+            left += 1
+            right -= 1
+
+        return True
+
