@@ -8,28 +8,27 @@ class Node:
 
 from typing import Optional
 class Solution:
-    def cloneGraph(self, node: Optional['Node']) -> Optional['Node']:
+    def cloneGraph(self, node: Optional['Node']=None) -> Optional['Node']:
         
-        # can keep a map of old nodes to new nodes
-        # go through each node and its neighbors and connect them
-        # can use bfs to go through each neighbor
+        # old2new mapping old nodes to newly made nodes
+        # can traverse original graph and get all new nodes
 
         if not node:
             return None
 
         old2new = {}
+        def dfs(node):
+            # base case
+            if node in old2new:
+                return old2new[node]
+            
+            # we know this is a new node now
+            old2new[node] = Node(node.val)
 
-        q = deque([node])
-        while q:
-            curr = q.popleft()
-            if curr not in old2new:
-                old2new[curr] = Node(curr.val)
+            # we go through the old ones neighbors
+            for neighbor in node.neighbors:
+                old2new[node].neighbors.append(dfs(neighbor))
+            return old2new[node]
 
-            for neighbor in curr.neighbors:
-                if neighbor not in old2new:
-                    old2new[neighbor] = Node(neighbor.val)
-                    q.append(neighbor)
-                old2new[curr].neighbors.append(old2new[neighbor])
-                
-        return old2new[node]
+        return dfs(node)
 
