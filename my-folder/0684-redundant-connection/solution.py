@@ -1,31 +1,24 @@
 class Solution:
-    def findRedundantConnection(self, edges: List[List[int]]) -> List[int]:
+    def findRedundantConnection(self, edges: list[list[int]]) -> list[int]:
         
-        parentMap = { node : node for node in range(1,len(edges)+1) }
- 
-        # find function with halving path compression
-        # def find(node):
-        #     # will find a nodes root parent
-        #     while node != parentMap[node]:
-        #         parentMap[node] = parentMap[parentMap[node]] # sets a node parent to its grandparent
-        #         node = parentMap[node]
-        #     return node
+        # basic union find, no path compression, no ranking
 
-        # find function with recursive path compression
+        parentMap = { edge : edge for edge in range(1, len(edges)+1)}
+
         def find(node):
-            # base case
-            if parentMap[node] == node:
+            if node == parentMap[node]: # base case: is its parent
                 return node
-
-            parentMap[node] = find(parentMap[node])
-            return parentMap[node]
-
-        # union part
-        for node1, node2 in edges:
-            parent1, parent2 = find(node1), find(node2)
-
-            if parent1 == parent2:
-                return [node1, node2]
             else:
-                parentMap[parent2] = parent1
+                parentMap[node] = find(parentMap[node])
+                return parentMap[node]
+        
+        # union part
+        for a, b in edges:
+            aParent = find(a)
+            bParent = find(b)
+
+            if aParent == bParent:
+                return [a, b]
+            else:
+                parentMap[bParent] = aParent
 
