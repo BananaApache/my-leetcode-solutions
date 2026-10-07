@@ -1,23 +1,29 @@
 class Solution:
-    def subsetsWithDup(self, nums: List[int]) -> List[List[int]]:
+    def subsetsWithDup(self, nums: list[int]) -> list[list[int]]:
 
-        nums.sort()
-        
+        # paths are remaining nums
+        # skip a start path if its same as previous
+        # always append to result
+        # find a way to cut off duplicate branches
+
         result = []
+        curr = []
+        nums.sort()
 
-        def dfs(permutation, index):
+        def dfs(index):
+            result.append(curr.copy())
             # base case
             if index == len(nums):
-                result.append(permutation)
                 return
-            
-            dfs(permutation + [nums[index]], index + 1)
+                
 
-            curr = nums[index]
-            while not (index >= len(nums) or curr != nums[index]):
-                index += 1
-            dfs(permutation, index)
+            for newIndex in range(index, len(nums)):
+                if newIndex > index and nums[newIndex - 1] == nums[newIndex]:
+                    continue
+                
+                curr.append(nums[newIndex])
+                dfs(newIndex + 1)
+                curr.pop()
         
-        dfs([], 0)
+        dfs(0)
         return result
-
