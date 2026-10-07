@@ -8,13 +8,14 @@ class Solution:
         def dfs(curr, remaining):
             # base case
             if len(curr) == len(nums):
-                result.append(curr)
+                result.append(curr.copy())
                 return
             
             for index in range(len(remaining)):
-                dfs(curr + [remaining[index]], remaining[:index]+remaining[index+1:])
+                curr.append(remaining[index])
+                dfs(curr, remaining[:index]+remaining[index+1:])
+                curr.pop()
             return
         
-        for index in range(len(nums)):
-            dfs([nums[index]], nums[:index]+nums[index+1:])
+        dfs([], nums)
         return result
