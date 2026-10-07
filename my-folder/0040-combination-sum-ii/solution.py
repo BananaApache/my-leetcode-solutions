@@ -1,28 +1,33 @@
 class Solution:
-    def combinationSum2(self, candidates: List[int], target: int) -> List[List[int]]:
-
-        candidates.sort()
+    def combinationSum2(self, candidates: list[int], target: int) -> list[list[int]]:
+        
+        # cut duplicate path starts at same level of decision tree
+        # use index to keep track of current start
 
         result = []
+        curr = []
+        total = 0
+        candidates.sort()
 
-        def dfs(total, path, index):
+        def dfs(index):
+            nonlocal total
             # base case
-            if total == target:
-                result.append(path[:])
+            if total > target:
                 return
-            elif total > target or index == len(candidates):
+            if total == target:
+                result.append(curr.copy())
                 return
             
-            path.append(candidates[index])
-            dfs(total + candidates[index], path, index + 1)
-            path.pop()
+            for newIndex in range(index, len(candidates)):
+                if newIndex != index and candidates[newIndex - 1] == candidates[newIndex]:
+                    continue
 
-            curr = candidates[index]
-            while not (index >= len(candidates) or curr != candidates[index]):
-                index += 1
-            dfs(total, path, index)
+                curr.append(candidates[newIndex])
+                total += candidates[newIndex]
+                dfs(newIndex + 1)
+                curr.pop()
+                total -= candidates[newIndex]
 
-        dfs(0, [], 0)
-
+        dfs(0)
         return result
 
