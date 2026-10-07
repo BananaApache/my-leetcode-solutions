@@ -1,38 +1,26 @@
 class Solution:
     def combinationSum(self, candidates: list[int], target: int) -> list[list[int]]:
         
-        # dfs and backtracking
-        # append to current when going down
-        # pop when going back up
-
-        # decisions are the candidates at each level
+        # paths are the remaining candidates
+        # traverse decision tree until current sum is bigger than target or equal
+        # pass in index to dfs to not traverse over previous to avoid duplicates
 
         result = []
+        curr = []
+        total = 0
 
-        #  0 1 2
-        # [2,3,5]
-        # target = 8
-
-
-        def dfs(curr, total, index):
-            # base case
-            if total > target:
-                return
-            if total == target:
+        def dfs(index, remaining):
+            if remaining == 0:
                 result.append(curr.copy())
                 return
+            if remaining < 0:
+                return
 
-            for newIndex in range(len(candidates[index : ])):
-                curr.append(candidates[newIndex + index])
-                dfs(curr, total + candidates[newIndex + index], index + newIndex)
+            for i in range(index, len(candidates)):
+                curr.append(candidates[i])
+                dfs(i, remaining - candidates[i])
                 curr.pop()
-        
-        dfs([], 0, 0)
-        # curr = []
-        # for index in range(len(candidates)):
-        #     curr.append(candidates[index])
-        #     dfs(curr, candidates[index], index)
-        #     curr.pop()
             
+        dfs(0, target)
         return result
 
