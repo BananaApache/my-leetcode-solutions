@@ -1,32 +1,41 @@
 class Solution:
-    def partition(self, s: str) -> List[List[str]]:
-
-        def isPalindrome(substrings):
-            for substring in substrings:
-                for index in range(len(substring) // 2):
-                    if substring[index] != substring[len(substring) - index - 1]:
-                        return False
-            
-            return True
+    def partition(self, s: str) -> list[list[str]]:
         
-        # substrings ALWAYS non-empty
-        # two paths:
-        #   - add char to current str
-        #   - start new substring starting with char
+        # try each prefix word
+        # if prefix word is Palindrome, run dfs
+        # once reached end, add to result
+
+        def isPalindrome(left, right):
+            # 01234
+            # aabaa
+
+            # 0123
+            # abba
+
+            while left < right:
+                if s[left] != s[right]:
+                    return False
+                left += 1
+                right -= 1
+            return True
 
         result = []
 
-        def backtrack(substrings, index):
+        curr = []
+        def dfs(index):
             # base case
             if index == len(s):
-                if isPalindrome(substrings):
-                    result.append(substrings)
+                result.append(curr.copy())
                 return
-            
-            backtrack(substrings + [s[index]], index + 1)
 
-            substrings[-1] += s[index]
-            backtrack(substrings, index + 1)
+            for right in range(index + 1, len(s) + 1):
+                newWord = s[index : right]
+                if isPalindrome(index, right - 1):
+                    curr.append(newWord)
+                    dfs(right)
+                    curr.pop()
         
-        backtrack([s[0]], 1)
+        dfs(0)
         return result
+
+
