@@ -9,10 +9,12 @@ class Solution:
         def dfs(root, index):
             # base case
             if index == len(nums):
-                result.append(root)
+                result.append(root.copy())
                 return
 
-            dfs(root + [nums[index]], index + 1)
+            root.append(nums[index])
+            dfs(root, index + 1)
+            root.pop()
             dfs(root, index + 1)
 
         dfs([], 0)
