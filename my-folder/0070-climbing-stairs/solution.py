@@ -1,19 +1,47 @@
 class Solution:
     def climbStairs(self, n: int) -> int:
+
+        # BOTTOMUP TABULAR
+
+        # its just fibonacci
+        # dp = [1] * (n + 1)
+
+        # for index in range(2, len(dp)):
+        #     dp[index] = dp[index - 1] + dp[index - 2]
         
-        dpArray = [0] * n
+        # return dp[n]
 
-        def dfs(steps):
-            # base cases
-            if steps < n and dpArray[steps]:
-                return dpArray[steps]
-            if steps == n:
-                return 1
-            elif steps > n:
-                return 0
+        prev = 1
+        curr = 1
+        while n > 1:
+            curr, prev = prev + curr, curr
+            n -= 1
+        return curr
 
-            dpArray[steps] = dfs(steps + 1) + dfs(steps + 2)
-            return dpArray[steps]
+        # TOPDOWN APPROACH MEMOIZATION
+        # thinking of decision tree with two paths at each node
+        # take 1 step
+        # take 2 step
+        # base case is when you reach n
+        # can try topdown with memoization
+        # use step as key
 
-        return dfs(0)
+        # cache = {}
+
+        # def dfs(step):
+        #     # base case
+        #     if step in cache:
+        #         return cache[step]
+        #     if step > n:
+        #         return 0
+        #     if step == n:
+        #         return 1
+
+        #     left = dfs(step + 1)
+        #     right = dfs(step + 2)
+
+        #     cache[step] = left + right
+        #     return left + right
+        
+        # return dfs(0)
 
