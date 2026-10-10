@@ -1,17 +1,12 @@
 class Solution:
-    def rob(self, nums: List[int]) -> int:
+    def rob(self, nums: list[int]) -> int:
 
-        # edge case
-        if len(nums) == 1:
-            return nums[0]
-        
-        dp = [0 for _ in range(len(nums))]
-        dp[-1] = nums[-1]
-        dp.append(0)
+        #  [ 4  3  3  1  0  0 ]        
+        #  [ 1  2  3  1       ]
+        # choice at each house is max of (steal and take of index + 2, or skip and take index + 1)
 
-        for index in range(len(nums) - 2, -1, -1):
+        dp = [0] * (len(nums) + 2)
+        for index in range(len(nums) - 1, -1, -1):
             dp[index] = max(nums[index] + dp[index + 2], dp[index + 1])
-            
-        return max(dp[0], dp[1])
-
+        return dp[0]
 
