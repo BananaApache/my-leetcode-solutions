@@ -1,15 +1,13 @@
 class Solution:
-    def canPartition(self, nums: List[int]) -> bool:
+    def canPartition(self, nums: list[int]) -> bool:
         
-        # check total even
+        # topdown with memoization
         total = sum(nums)
         if total % 2 != 0:
             return False
+        target = total // 2
         
-        target = int(total / 2)
-
         possibles = {0}
-        dp = [None] * len(nums)
 
         for index in range(len(nums)):
             newPossibles = set()
