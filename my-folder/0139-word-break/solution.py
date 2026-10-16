@@ -1,30 +1,19 @@
 class Solution:
-    def wordBreak(self, s: str, wordDict: List[str]) -> bool:
+    def wordBreak(self, s: str, wordDict: list[str]) -> bool:
         
-        # length 9
-        # 0 1 2 3 4 5 6 7 8
-        # c a t s a n d o g
-        # F F F F F F F F F
-        # cats, dog, sand, and, cat
-        # lenghts = 4,3
+        # work backwards
 
-        wordDict = set(wordDict)
+        wordSet = set(wordDict)
         lengths = set()
-        for word in wordDict:
+        for word in wordSet:
             lengths.add(len(word))
-        # smallestLength = min(lengths)
 
-        dp = [False] * len(s)
-        dp.append(True)
-
-        for index in range(len(s), -1, -1):
+        # dp[index]: whether or not s[index : ] can be made from wordDict
+        dp = [False] * (len(s) + 1)
+        dp[-1] = True
+        for index in range(len(s) - 1, -1, -1):
             for length in lengths:
-                if index + length <= len(s):
-                    subword = s[index : index + length]
-                    if subword in wordDict and not dp[index]:
-                        dp[index] = True and dp[index + length]
-                        
-        
-        print(dp)
+                if index + length <= len(s) and s[index : index + length] in wordSet:
+                    dp[index] = dp[index] or dp[index + length]
         return dp[0]
-
+        
