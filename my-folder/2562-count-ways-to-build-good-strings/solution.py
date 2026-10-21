@@ -1,12 +1,10 @@
 class Solution:
     def countGoodStrings(self, low: int, high: int, zero: int, one: int) -> int:
         
-        # state: currLength
-        # dfs(currLength): ways to build good strings from index to end
-        # recurrence: add (1 if index in range[low, high]) + dfs(index + zero) + dfs(index + one)
-
+        # topdown dfs with memo
+        # dfs(currLength): ways to make good strings starting at currLength
+        
         cache = {}
-
         def dfs(currLength):
             # base case
             if currLength > high:
@@ -14,14 +12,10 @@ class Solution:
             if currLength in cache:
                 return cache[currLength]
             
-            numWays = 0
-
-            if currLength in range(low, high + 1):
-                numWays += 1
-
-            numWays += dfs(currLength + zero) + dfs(currLength + one)
-            cache[currLength] = numWays % (10**9 + 7)
-            return numWays
-        
-        return dfs(0) % (10**9 + 7)
+            total = 1 if low <= currLength else 0
+            total += dfs(currLength + zero)
+            total += dfs(currLength + one)
+            cache[currLength] = total % (10**9 + 7)
+            return cache[currLength]
+        return dfs(0)
 
